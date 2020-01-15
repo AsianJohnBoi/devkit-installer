@@ -7,7 +7,7 @@ select program in \
     Python-3 \
     Java \
     Ruby \
-    C# \
+    .NET-Core \
     C \
     C++ \
     Perl \
@@ -25,9 +25,17 @@ select program in \
     "Docker")
         sudo curl -fsSL https://get.docker.com/ | sh
         echo "Would you like to access docker as non-root user?"
-        select $option in yes or no; do
-        sudo usermod -aG docker "$user"
-        echo "User can now access docker as non-root. You must reboot computer for the changes to take effect."
+        select option in yes or no; do
+            case $option in
+            "yes")
+                sudo usermod -aG docker "$user"
+                echo "User can now access docker as non-root. You must reboot computer for the changes to take effect."
+                ;;
+            "no")
+                echo ""
+                ;;
+            esac
+        done
         ;;
 
     "NodeJS")
@@ -61,6 +69,31 @@ select program in \
                 ;;
             esac
         done
+        ;;
+
+    ".NET-Core")
+        echo "Installing .NET Core SDK"
+        # Register microsoft key and feed
+        wget -q https://packages.microsoft.com/config/ubuntu/19.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+        sudo dpkg -i packages-microsoft-prod.deb
+
+        # .NET core SDK
+        sudo apt-get update
+        sudo apt-get install apt-transport-https
+        sudo apt-get update
+        sudo apt-get install dotnet-sdk-3.1
+
+        # ASP.NET Core runtime
+        sudo apt-get update
+        sudo apt-get install apt-transport-https
+        sudo apt-get update
+        sudo apt-get install aspnetcore-runtime-3.1
+
+        # .NET Core runtime
+        sudo apt-get update
+        sudo apt-get install apt-transport-https
+        sudo apt-get update
+        sudo apt-get install dotnet-runtime-3.1
         ;;
     esac
 done

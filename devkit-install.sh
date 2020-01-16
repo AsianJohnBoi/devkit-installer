@@ -18,7 +18,8 @@ select program in \
     BASIC \
     PHP \
     Objective-C \
-    Docker; do
+    Docker \
+    Exit; do
 
     case $program in
     # Two case values are declared here for matching
@@ -95,5 +96,123 @@ select program in \
         sudo apt-get update
         sudo apt-get install dotnet-runtime-3.1
         ;;
+
+    "Python-3")
+        echo "Installing latest version of Python 3"
+        sudo apt update
+        sudo apt install software-properties-common
+        echo "Set default python version to latest version?"
+        select option in yes no; do
+            case $option in
+            "yes")
+                sudo update-alternatives --set python /usr/bin/python3.8
+                ;;
+            esac
+        done
+        ;;
+
+    "Java")
+        echo "Which JDK version?"
+        select option in 8 9 10 11 12 13; do
+            case $option in
+            "8")
+                sudo apt install openjdk-8-jdk
+                ;;
+            "9")
+                sudo apt install openjdk-9-jdk
+                ;;
+            "10")
+                sudo apt install openjdk-10-jdk
+                ;;
+            "11")
+                sudo apt install openjdk-11-jdk
+                ;;
+            "12")
+                sudo apt install openjdk-12-jdk
+                ;;
+            "13")
+                sudo apt install openjdk-13-jdk
+                ;;
+            esac
+        done
+        echo "Change default version with 'sudo update-alternatives --config java'"
+        echo "Set environment variable 'JAVA_HOME=pathtojava' >> 'sudo nano /etc/environment'"
+        ;;
+
+    "Ruby")
+        echo "Installing Ruby"
+
+        # Installing dependencies for Ruby and Rails
+        sudo apt install curl
+        curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+        curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+        echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
+        sudo apt-get update
+        sudo apt-get install git-core zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev nodejs yarn
+
+        # Install ruby with rbenv
+        git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+        echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >>~/.bashrc
+        echo 'eval "$(rbenv init -)"' >>~/.bashrc
+        exec $SHELL
+
+        git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+        echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >>~/.bashrc
+        exec $SHELL
+
+        rbenv install 2.7.0
+        rbenv global 2.7.0
+        ruby -v
+        gem install bundler
+
+        # Install Rails
+        gem install rails -v 6.0.2.1
+        rbenv rehash 
+        rails -v
+
+        # More info https://gorails.com/setup/
+        ;;
+
+    "C")
+        echo "Installing C"
+        ;;
+
+    "C++")
+        echo "Installing C++"
+        ;;
+
+    "Perl")
+        echo "Installing Perl"
+        ;;
+
+    "FORTRAN")
+        echo "Installing FORTRAN"
+        ;;
+
+    "Ada")
+        echo "Installing Ada"
+        ;;
+
+    "Pascal")
+        echo "Installing Pascal"
+        ;;
+
+    "BASIC")
+        echo "Installing BASIC"
+        ;;
+
+    "Objective-C")
+        echo "Installing Objective C"
+        ;;
+
+    "SQL")
+        echo "Installing SQL"
+        ;;
+
+    "Exit")
+        break
+        ;;
+
     esac
 done

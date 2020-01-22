@@ -11,14 +11,14 @@ select program in \
     C \
     C++ \
     Perl \
-    SQL \
+    mySQL \
     FORTRAN \
     Ada \
     Pascal \
-    BASIC \
     PHP \
     Objective-C \
     Docker \
+    PostgreSQL \
     Exit; do
 
     case $program in
@@ -80,21 +80,21 @@ select program in \
 
         # .NET core SDK
         sudo apt-get update
-        sudo apt-get install apt-transport-https
+        sudo apt-get install apt-transport-https -y
         sudo apt-get update
-        sudo apt-get install dotnet-sdk-3.1
+        sudo apt-get install dotnet-sdk-3.1 -y
 
         # ASP.NET Core runtime
         sudo apt-get update
-        sudo apt-get install apt-transport-https
+        sudo apt-get install apt-transport-https -y
         sudo apt-get update
-        sudo apt-get install aspnetcore-runtime-3.1
+        sudo apt-get install aspnetcore-runtime-3.1 -y
 
         # .NET Core runtime
         sudo apt-get update
-        sudo apt-get install apt-transport-https
+        sudo apt-get install apt-transport-https -y
         sudo apt-get update
-        sudo apt-get install dotnet-runtime-3.1
+        sudo apt-get install dotnet-runtime-3.1 -y
         ;;
 
     "Python-3")
@@ -116,22 +116,22 @@ select program in \
         select option in 8 9 10 11 12 13; do
             case $option in
             "8")
-                sudo apt install openjdk-8-jdk
+                sudo apt install openjdk-8-jdk -y
                 ;;
             "9")
-                sudo apt install openjdk-9-jdk
+                sudo apt install openjdk-9-jdk -y
                 ;;
             "10")
-                sudo apt install openjdk-10-jdk
+                sudo apt install openjdk-10-jdk -y
                 ;;
             "11")
-                sudo apt install openjdk-11-jdk
+                sudo apt install openjdk-11-jdk -y
                 ;;
             "12")
-                sudo apt install openjdk-12-jdk
+                sudo apt install openjdk-12-jdk -y
                 ;;
             "13")
-                sudo apt install openjdk-13-jdk
+                sudo apt install openjdk-13-jdk -y
                 ;;
             esac
         done
@@ -149,7 +149,7 @@ select program in \
         echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
         sudo apt-get update
-        sudo apt-get install git-core zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev nodejs yarn
+        sudo apt-get install git-core zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev nodejs yarn -y
 
         # Install ruby with rbenv
         git clone https://github.com/rbenv/rbenv.git ~/.rbenv
@@ -168,7 +168,7 @@ select program in \
 
         # Install Rails
         gem install rails -v 6.0.2.1
-        rbenv rehash 
+        rbenv rehash
         rails -v
 
         # More info https://gorails.com/setup/
@@ -176,38 +176,71 @@ select program in \
 
     "C")
         echo "Installing C"
+        sudo apt update
+        sudo apt install build-essential -y  # installs gcc, g++ and make
+        sudo apt-get install manpages-dev -y # installs the manual for GNU/Linux
         ;;
 
     "C++")
         echo "Installing C++"
+        sudo apt install g++ -y
+        sudo apt install build-essential -y
         ;;
 
     "Perl")
         echo "Installing Perl"
+        apt-get install -y perl
         ;;
 
     "FORTRAN")
         echo "Installing FORTRAN"
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+        sudo apt update
+        sudo apt install gfortran-9 -y
+        gfortran-9 --version
         ;;
 
     "Ada")
         echo "Installing Ada"
+        apt-get install gnat-4.3 -y
+        apt-get install gnat-gps -y
         ;;
 
     "Pascal")
         echo "Installing Pascal"
-        ;;
-
-    "BASIC")
-        echo "Installing BASIC"
+        sudo apt-get install lazarus-ide -y
+        gpg --keyserver hkp://pgp.mit.edu:11371 --recv-keys 6A11800F
+        gpg -a --export 6A11800F | sudo apt-key add -
+        echo "deb http://www.hu.freepascal.org/lazarus/ lazarus-stable universe" | sudo tee /etc/apt/sources.list.d/lazarus-stable.list
+        sudo apt-get update
+        sudo apt-get install lazarus -y
         ;;
 
     "Objective-C")
-        echo "Installing Objective C"
+        echo "Installing Objective C (gobjc)"
+        sudo apt-get install gobjc++ -y
         ;;
 
-    "SQL")
-        echo "Installing SQL"
+    "PHP")
+        echo "Installing PHP"
+        sudo apt-get install php libapache2-mod-php
+        ;;
+
+    "mySQL")
+        echo "Installing mySQL"
+        sudo apt-get update
+        sudo apt-get install mysql-server
+        sudo mysql_secure_installation utility
+        sudo systemctl start mysql
+        sudo systemctl enable mysql # start on boot
+        echo "Start mysql shell with 'mysql -u root'"
+        ;;
+    
+    "PostgreSQL")
+        sudo apt-get install postgresql postgresql-contrib
+        sudo update-rc.d postgresql enable # start on boot
+        sudo service postgresql start
+        echo "Switch to root user, 'su - postgres' & 'psql'"
         ;;
 
     "Exit")
